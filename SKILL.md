@@ -1,13 +1,13 @@
 ---
 name: github-issue-fix
-description: Fix upstream GitHub issues and pull request CI failures with GitHub CLI. Use when Codex is asked to fix one or more GitHub issues, triage open issues, prepare upstream pull requests, repair failing PR checks, handle maintainer review feedback, follow project contribution rules, or generate a manual PR handoff when automatic PR creation is unavailable.
+description: Fix upstream GitHub issues and pull request CI failures with GitHub CLI. Use when Codex is asked to fix one or more GitHub issues, triage open issues, prepare upstream pull requests, repair failing PR checks, resolve merge conflicts or needs-rebase PRs, handle maintainer review feedback, follow project contribution rules, or generate a manual PR handoff when automatic PR creation is unavailable.
 ---
 
 # GitHub Issue Fix
 
 ## Core Workflow
 
-Use this skill for open-source upstream issue repair, PR creation, and PR CI repair.
+Use this skill for open-source upstream issue repair, PR creation, PR CI repair, and PR conflict repair.
 
 1. Preserve local work. Check `git status --short`, current branch, remotes, and authentication before editing.
 2. Read project instructions first: `AGENTS.md`, `CONTRIBUTING*`, `.github/PULL_REQUEST_TEMPLATE*`, `.github/workflows/`, pre-commit configs, test configs, and language/tooling files.
@@ -69,6 +69,30 @@ When given a PR link/number or asked to fix current-branch CI:
 5. For permission or new-contributor gates, confirm the exact log message. If you cannot add the needed label, leave a maintainer-facing comment after local checks are clean.
 6. For automated-review feedback, decide whether each point is a real defect, false positive, or optional polish. Fix real defects with tests.
 7. Re-run the closest local equivalent, push fixes, and re-check PR status.
+
+## PR Conflict Repair Procedure
+
+Use this when a PR is marked `CONFLICTING`, `DIRTY`, `needs-rebase`, or the user says a submitted PR has merge conflicts.
+
+1. Inspect PR state:
+   - `gh pr view <pr> --json mergeable,mergeStateStatus,headRefName,headRepositoryOwner,baseRefName,labels`
+   - `gh pr checks <pr>` to avoid mixing conflict repair with unrelated CI failures.
+2. Work on the existing PR branch, preferably in an isolated worktree. Do not use `git reset --hard` or discard unrelated user work.
+3. Fetch both upstream and fork remotes:
+   - `git fetch <upstream> <base-branch>`
+   - `git fetch <fork> <head-branch>`
+4. Prefer a clean rebase onto the upstream base branch when the branch is small and linear:
+   - `git switch <head-branch>`
+   - `git rebase <upstream>/<base-branch>`
+5. If rebase conflicts occur:
+   - Resolve conflict markers by preserving the PR's intended behavior and the upstream version's newer structure.
+   - Use `git diff --name-only --diff-filter=U` to list unresolved files.
+   - Inspect upstream changes around each conflict before editing.
+   - Re-run focused static and behavior checks for every touched area.
+   - Continue with `git rebase --continue` only after the index is clean.
+6. If the conflict is large or the upstream code invalidates the original approach, stop and classify as `needs-redesign` instead of forcing a stale patch.
+7. Push with `--force-with-lease` only after a successful rebase, because updating an existing PR branch requires rewriting the branch tip.
+8. Re-check `mergeable` and `mergeStateStatus`, then comment with a short conflict-resolution summary when useful.
 
 ## Fork and PR Rules
 

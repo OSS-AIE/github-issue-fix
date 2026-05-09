@@ -65,6 +65,37 @@ gh run view <run-id> --repo <owner>/<repo> --job <job-id> --log
 
 If `gh pr checks` links to a failed job, open the job log before editing. Classify the failure using `references/pr-quality-gate.md`.
 
+## Conflict Repair
+
+Use this for PRs labeled `needs-rebase` or reported as conflicting.
+
+```bash
+gh pr view <pr-number> --repo <owner>/<repo> \
+  --json mergeable,mergeStateStatus,headRefName,headRepositoryOwner,baseRefName,labels
+
+git fetch <upstream-remote> <base-branch>
+git fetch <fork-remote> <head-branch>
+git switch <head-branch>
+git rebase <upstream-remote>/<base-branch>
+```
+
+If conflicts occur:
+
+```bash
+git diff --name-only --diff-filter=U
+git status --short
+```
+
+Resolve conflict markers by integrating the PR's intended fix into the current upstream structure. Run focused checks, then:
+
+```bash
+git add <resolved_files>
+git rebase --continue
+git push --force-with-lease <fork-remote> <head-branch>
+```
+
+Avoid force-pushing unless the rebase completed and the local branch contains the intended PR commits.
+
 ## Maintainer Gate Comment
 
 When CI is blocked by a permission label:
