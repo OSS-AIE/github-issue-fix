@@ -1,4 +1,4 @@
 interface:
   display_name: "GitHub Issue Fix"
-  short_description: "Fix upstream GitHub issues and PR CI with quality gates"
-  default_prompt: "Use github-issue-fix. Issue or PR: <link>. Triage, fix, validate, and prepare or update the PR."
+  short_description: "Fix upstream GitHub issues, PR CI, conflicts, and review feedback"
+  default_prompt: "Use github-issue-fix. Issue or PR: <link>. Triage ownership, fix, validate, handle CI/review feedback, and prepare or update the PR."

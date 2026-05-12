@@ -1,6 +1,6 @@
 ---
 name: github-issue-fix
-description: Fix upstream GitHub issues and pull request CI failures with GitHub CLI. Use when Codex is asked to fix one or more GitHub issues, triage open issues, prepare upstream pull requests, repair failing PR checks, resolve merge conflicts or needs-rebase PRs, handle maintainer review feedback, follow project contribution rules, or generate a manual PR handoff when automatic PR creation is unavailable.
+description: Fix upstream GitHub issues and pull request CI failures with GitHub CLI. Use when Codex is asked to fix one or more GitHub issues, triage open issues, prepare upstream pull requests, repair failing PR checks, resolve merge conflicts or needs-rebase PRs, handle maintainer review feedback or automated review comments, follow project contribution rules, distinguish code failures from permission/external CI gates, or generate a manual PR handoff when automatic PR creation is unavailable.
 ---
 
 # GitHub Issue Fix
@@ -11,7 +11,7 @@ Use this skill for open-source upstream issue repair, PR creation, PR CI repair,
 
 1. Preserve local work. Check `git status --short`, current branch, remotes, and authentication before editing.
 2. Read project instructions first: `AGENTS.md`, `CONTRIBUTING*`, `.github/PULL_REQUEST_TEMPLATE*`, `.github/workflows/`, pre-commit configs, test configs, and language/tooling files.
-3. Fetch issue or PR metadata with `gh`: title, body, labels, assignees, linked PRs, comments, reviews, checks, and timeline signals.
+3. Fetch issue or PR metadata with `gh`: title, body, labels, assignees, linked PRs, comments, reviews, inline review threads, checks, statuses, and timeline signals.
 4. Classify before coding:
    - `skip`: closed, duplicate, maintainer-owned, already fixed by a PR, or explicitly not wanted.
    - `needs-info`: insufficient reproduction, unclear expected behavior, private artifacts required, or likely design/RFC work.
@@ -21,6 +21,8 @@ Use this skill for open-source upstream issue repair, PR creation, PR CI repair,
 7. Run the PR Quality Gate before committing.
 8. Commit with project-required sign-off or trailers. For DCO projects, use `git commit -s`.
 9. Push to a fork and create/update one PR per independent fix. Use a local HTML handoff if PR creation cannot be automated.
+
+Industry pattern check: treat issue fixing as an issue-to-branch-to-PR loop with explicit review and validation feedback. Modern coding-agent flows assign or label issues, create a PR from an isolated branch, run tests/linters before handoff, respond to PR comments and inline review threads, and rely on humans or repository policy for merge and privileged CI gates.
 
 Read `references/pr-quality-gate.md` before opening or updating a PR. Read `references/gh-workflow.md` before using `gh` for triage, fork setup, or PR updates.
 
@@ -54,7 +56,7 @@ Batch output should include issue number, decision, reason, branch, PR URL or ha
 When given a PR link/number or asked to fix current-branch CI:
 
 1. Inspect failing checks with `gh pr checks` and job logs with `gh run view --job --log`.
-2. Also inspect PR comments and automated reviews; CI may be blocked by a bot comment rather than code.
+2. Also inspect PR comments, inline review comments, review summaries, status contexts, and automated reviews; CI may be blocked by a bot comment or external status rather than code.
 3. Classify each failure:
    - permission/label gate,
    - lint/format,
@@ -68,7 +70,9 @@ When given a PR link/number or asked to fix current-branch CI:
 4. Fix only failures caused by the PR. Do not hide failures by skipping tests, loosening assertions, or deleting checks unless the test itself is demonstrably wrong.
 5. For permission or new-contributor gates, confirm the exact log message. If you cannot add the needed label, leave a maintainer-facing comment after local checks are clean.
 6. For automated-review feedback, decide whether each point is a real defect, false positive, or optional polish. Fix real defects with tests.
-7. Re-run the closest local equivalent, push fixes, and re-check PR status.
+7. Check whether comments are stale by comparing comment commit IDs with the current PR head before changing code.
+8. Re-run the closest local equivalent, push fixes, and re-check PR status.
+9. If all local checks are clean but a permission, trusted-contributor, label, or external-service gate remains, leave a precise maintainer-facing note instead of pushing no-op commits.
 
 ## PR Conflict Repair Procedure
 

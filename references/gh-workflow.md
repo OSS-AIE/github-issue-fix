@@ -22,6 +22,9 @@ gh issue view <number-or-url> --repo <owner>/<repo> \
 
 gh pr list --repo <owner>/<repo> --state all --search "<issue-number-or-title>" \
   --json number,title,state,url,author,labels,isDraft,mergedAt,body
+
+gh issue list --repo <owner>/<repo> --state open \
+  --json number,title,labels,assignees,comments,updatedAt,url
 ```
 
 Skip signals:
@@ -60,10 +63,24 @@ Use one branch and PR per independent root cause.
 gh pr checks <pr-number> --repo <owner>/<repo> \
   --json name,state,bucket,link,workflow,description,startedAt,completedAt
 
+gh pr view <pr-number> --repo <owner>/<repo> \
+  --json reviews,comments,headRefOid,statusCheckRollup,mergeStateStatus,isDraft
+
 gh run view <run-id> --repo <owner>/<repo> --job <job-id> --log
+
+gh api repos/<owner>/<repo>/pulls/<pr-number>/comments --paginate
 ```
 
-If `gh pr checks` links to a failed job, open the job log before editing. Classify the failure using `references/pr-quality-gate.md`.
+If `gh pr checks` links to a failed job, open the job log before editing. For inline review comments, compare `commit_id` with `headRefOid`; stale comments may already be handled. Classify each failure using `references/pr-quality-gate.md`.
+
+To reply to a specific inline review comment after fixing it:
+
+```bash
+gh api repos/<owner>/<repo>/pulls/comments/<comment-id>/replies \
+  -f body="Fixed in <commit-or-branch>. Validation: <command and result>."
+```
+
+Use comments sparingly; prefer one concise PR comment when many related comments were fixed by the same commit.
 
 ## Conflict Repair
 
@@ -103,3 +120,7 @@ When CI is blocked by a permission label:
 ```text
 I pushed a follow-up addressing review feedback and updated the PR description with validation details. Local changed-file checks pass. The remaining check appears to be a new-contributor gate requiring a maintainer label/approval that I cannot add from this fork. If the fix looks appropriate, could a maintainer please trigger full CI?
 ```
+
+## Low-Value PR Exit
+
+If issue triage shows the change would be speculative, duplicate an active PR, conflict with maintainer direction, or require project design approval, do not open a PR. Record a handoff with the issue, reason, and recommended maintainer question instead.
