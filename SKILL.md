@@ -118,6 +118,9 @@ Use this short checklist after fixing review feedback or CI failures, especially
 4. For PR title failures, update the title and trigger a new check run by pushing a real or metadata-only signed commit if the repository does not allow reruns.
 5. When a fix removes code, scan the nearby block for now-unused variables, comments, imports, and tests. Run a focused search or linter for the touched file before pushing.
 6. Update the PR body after review fixes so it describes the final implementation, not the first attempt. Preserve repository-managed footer lines such as version metadata.
+7. When changing helper scripts that claim to run on "changed files", verify the tool's default scope. For example, bare `pre-commit run` covers staged files, not unstaged or untracked files. If the intended scope is all local changes, explicitly gather staged, unstaged, and untracked files, exclude deleted files, pass them with `--files`, and simulate the argument list in a temporary git repo when practical.
+8. When adding timeouts or fallbacks around hardware/environment probes, distinguish CPU/mock jobs from hardware-routed jobs. Do not silently replace real hardware dependencies with mocks when the selected test path or runner expects hardware; fail loudly with a clear error instead.
+9. If CI reports "pre-commit hook(s) made changes", apply or replicate the formatter diff locally before pushing again. Syntax checks such as `bash -n` or `py_compile` are not enough for files governed by auto-format hooks.
 
 ## Output Requirements
 
