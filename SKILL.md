@@ -105,7 +105,19 @@ Use this when a PR is marked `CONFLICTING`, `DIRTY`, `needs-rebase`, or the user
 3. Start from the upstream default branch unless updating an existing PR branch.
 4. Keep commits signed according to project rules.
 5. Use project title prefixes and PR template sections.
-6. If automatic PR creation fails, generate a manual handoff using `scripts/generate_pr_report.py`.
+6. Before opening or updating a PR, inspect the repository's title validation rules, style guide, and PR template. If they disagree, choose a title that satisfies the enforced CI rule first and is as close as possible to the style guide, then explain the choice in the PR body when useful.
+7. If automatic PR creation fails, generate a manual handoff using `scripts/generate_pr_report.py`.
+
+## Review-Learning Checklist
+
+Use this short checklist after fixing review feedback or CI failures, especially when several similar PRs are being created:
+
+1. Compare every automated review comment's commit SHA with the current PR head. Treat comments on old commits as stale only after the current diff and CI prove the issue is fixed.
+2. For Python changes, run at least `python -m py_compile <changed files>` and the narrowest available linter for touched files, such as `ruff check <file>`, before relying on CI.
+3. For shell changes, run `bash -n <script>` and normalize line endings when working from Windows before trusting shell syntax results.
+4. For PR title failures, update the title and trigger a new check run by pushing a real or metadata-only signed commit if the repository does not allow reruns.
+5. When a fix removes code, scan the nearby block for now-unused variables, comments, imports, and tests. Run a focused search or linter for the touched file before pushing.
+6. Update the PR body after review fixes so it describes the final implementation, not the first attempt. Preserve repository-managed footer lines such as version metadata.
 
 ## Output Requirements
 
