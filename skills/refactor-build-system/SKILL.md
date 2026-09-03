@@ -1,6 +1,6 @@
 ---
 name: refactor-build-system
-description: Use when a repository task concerns build-script usability, build or test speed, dependency structure, reproducibility, CI build failures, SBOM, provenance, or build supply-chain security.
+description: Use when a repository task mentions build-script usability, CMake/CMakePresets/Modern CMake, CMAKE_BUILD_PARALLEL_LEVEL, Maven/Gradle, Python packaging, shell wrappers, incremental builds, cache/parallelism, build/test speed, dependency graphs, reproducibility, CI build failures, SBOM/provenance, or build supply-chain security.
 ---
 
 # Refactor Build System
@@ -8,6 +8,19 @@ description: Use when a repository task concerns build-script usability, build o
 ## Overview
 
 Turn build-engineering observations into a small, evidence-backed change that preserves outputs and follows the repository's native build and contribution workflow.
+
+## Trigger Hints
+
+Use this skill for mainstream build-framework cleanup and optimization, including:
+
+- Modern CMake: `CMakeLists.txt`, `CMakePresets.json`, toolchain files, `find_package`, `target_link_libraries`, install/export rules, generated files, and `compile_commands.json`.
+- CMAKE_BUILD_PARALLEL_LEVEL: parallel build defaults, CI worker sizing, memory-sensitive job limits, and platform-specific overrides.
+- Maven / Gradle: dependency reports, wrapper usage, build cache, test selection, profiles, lifecycle phases, and plugin configuration.
+- Python packaging: `pyproject.toml`, `setup.py`, wheels, editable installs, dependency groups, build backends, and lockfiles.
+- Shell wrapper: `build.sh`, `build.ps1`, Makefile facade, help output, doctor/setup commands, quoting, error handling, and local/CI parity.
+- incremental build: rebuild scope, generated-code invalidation, dependency edges, timestamp churn, and test impact selection.
+- cache / parallelism: local/remote caches, cache keys, artifact reuse, concurrency, resource contention, and reproducibility.
+- build performance verification: clean versus incremental timings, trace/log evidence, output equivalence, and before/after comparison.
 
 ## Composition Contract
 

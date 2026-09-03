@@ -1,4 +1,4 @@
 interface:
   display_name: "GitHub Issue Fix"
   short_description: "Fix upstream GitHub issues, PR CI, conflicts, and review feedback"
-  default_prompt: "Use $github-issue-fix for this GitHub issue or PR. For build-system, dependency, performance, or supply-chain work, also use $refactor-build-system before triage and implementation."
+  default_prompt: "Use $github-issue-fix for this GitHub issue or PR. For CMake, Maven/Gradle, Python packaging, shell wrapper, dependency, cache/parallelism, performance, or supply-chain work, also use $refactor-build-system before triage and implementation."

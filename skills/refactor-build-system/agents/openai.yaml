@@ -1,6 +1,6 @@
 interface:
   display_name: "Refactor Build System"
-  short_description: "Improve build usability, speed, dependencies, and security"
-  default_prompt: "Use $refactor-build-system to analyze this repository's build system and implement the smallest evidence-backed improvement."
+  short_description: "Improve CMake, packaging, cache, speed, and build security"
+  default_prompt: "Use $refactor-build-system to improve this repo's Modern CMake/CMAKE_BUILD_PARALLEL_LEVEL, Maven / Gradle, Python packaging, Shell wrapper, incremental build, cache / parallelism, or build performance verification."
 policy:
   allow_implicit_invocation: true
