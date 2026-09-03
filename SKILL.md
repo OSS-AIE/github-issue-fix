@@ -5,6 +5,10 @@ description: Fix upstream GitHub issues and pull request CI failures with GitHub
 
 # GitHub Issue Fix
 
+## Build Engineering Composition
+
+For build-script usability, build/test performance, dependency structure, reproducibility, SBOM, provenance, or build supply-chain security work, **REQUIRED SUB-SKILL:** Use `refactor-build-system` before selecting an issue or editing code. `refactor-build-system` owns the build analysis and issue contract; this skill remains the owner of GitHub issue triage, branch/PR operations, Actions checks, review feedback, and final handoff. Do not duplicate the build-analysis procedure here.
+
 ## Core Workflow
 
 Use this skill for open-source upstream issue repair, PR creation, PR CI repair, and PR conflict repair.

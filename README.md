@@ -20,3 +20,18 @@ python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-githu
 ```
 
 The skill itself is in [SKILL.md](SKILL.md).
+
+For build-system usability, dependency, performance, reproducibility, or
+supply-chain work, install the shared build-engineering skill as well:
+
+```bash
+python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo OSS-AIE/github-issue-fix \
+  --path skills/refactor-build-system \
+  --name refactor-build-system
+```
+
+`github-issue-fix` keeps ownership of GitHub issue, PR, review, and Actions
+operations. `refactor-build-system` supplies the platform-neutral analysis and
+minimal-change contract. The GitCode adapter uses the same shared skill while
+retaining its own CLI, PR, and Pipeline workflow.

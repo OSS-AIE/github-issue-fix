@@ -1,0 +1,6 @@
+interface:
+  display_name: "Refactor Build System"
+  short_description: "Improve build usability, speed, dependencies, and security"
+  default_prompt: "Use $refactor-build-system to analyze this repository's build system and implement the smallest evidence-backed improvement."
+policy:
+  allow_implicit_invocation: true
